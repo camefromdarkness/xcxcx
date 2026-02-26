@@ -1,0 +1,227 @@
+.forum {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0;
+  width: 100%;
+}
+
+.forum h1 {
+  color: #dcddde;
+  margin-bottom: 2rem;
+  text-align: left;
+  font-size: 2rem;
+}
+
+.create-post-section {
+  background-color: #2f3136;
+  border: 1px solid #202225;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.create-post-section h2 {
+  color: #dcddde;
+  margin-bottom: 1.5rem;
+  font-size: 1.2em;
+}
+
+.post-input {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+  border: 1px solid #202225;
+  background-color: #40444b;
+  color: #dcddde;
+  border-radius: 6px;
+  font-size: 1em;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+}
+
+.post-input:focus {
+  outline: none;
+  border-color: #5865F2;
+  background-color: #40444b;
+}
+
+.post-textarea {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+  border: 1px solid #202225;
+  background-color: #40444b;
+  color: #dcddde;
+  border-radius: 6px;
+  font-size: 1em;
+  font-family: inherit;
+  resize: vertical;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+}
+
+.post-textarea:focus {
+  outline: none;
+  border-color: #5865F2;
+  background-color: #40444b;
+}
+
+.btn-submit {
+  background-color: #5865F2;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1em;
+  font-weight: 500;
+  transition: background-color 0.3s;
+}
+
+.btn-submit:hover {
+  background-color: #7289da;
+}
+
+.posts-list {
+  margin-top: 0;
+}
+
+.posts-list h2 {
+  color: #dcddde;
+  margin-bottom: 1.5rem;
+  font-size: 1.2em;
+}
+
+.no-posts {
+  text-align: center;
+  color: #72767d;
+  padding: 2rem;
+  font-style: italic;
+}
+
+.post-item {
+  background-color: #2f3136;
+  border: 1px solid #202225;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  transition: border-color 0.3s ease;
+}
+
+.post-item:hover {
+  border-color: #5865F2;
+}
+
+.post-title {
+  color: #dcddde;
+  margin: 0 0 0.75rem 0;
+  font-size: 1.2em;
+  font-weight: 600;
+}
+
+.post-meta {
+  color: #72767d;
+  font-size: 0.85em;
+  margin: 0 0 1rem 0;
+}
+
+.post-meta strong {
+  color: #5865F2;
+}
+
+.post-content {
+  color: #b9bbbe;
+  line-height: 1.6;
+  margin: 0.75rem 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.post-actions {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 0.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid #202225;
+}
+
+.btn-edit,
+.btn-delete {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9em;
+  font-weight: 500;
+  transition: background-color 0.3s;
+}
+
+.btn-edit {
+  background-color: #5865F2;
+  color: white;
+}
+
+.btn-edit:hover {
+  background-color: #7289da;
+}
+
+.btn-delete {
+  background-color: #ed4245;
+  color: white;
+}
+
+.btn-delete:hover {
+  background-color: #d83c3e;
+}
+
+.edit-form {
+  border-top: 1px solid #202225;
+  padding-top: 1.5rem;
+}
+
+.edit-buttons {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.btn-save,
+.btn-cancel {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9em;
+  font-weight: 500;
+  transition: background-color 0.3s;
+}
+
+.btn-save {
+  background-color: #5865F2;
+  color: white;
+}
+
+.btn-save:hover {
+  background-color: #7289da;
+}
+
+.btn-cancel {
+  background-color: #72767d;
+  color: white;
+}
+
+.btn-cancel:hover {
+  background-color: #83878e;
+}
+
+.error-message {
+  color: #f04747;
+  padding: 0.75rem;
+  background-color: rgba(237, 66, 69, 0.15);
+  border-left: 4px solid #ed4245;
+  margin-bottom: 0.75rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}

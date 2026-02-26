@@ -1,0 +1,64 @@
+/* Discord-like theme for the forum app */
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #2f3136;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #202225;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #40444b;
+}
+
+/* Selection styling */
+::selection {
+  background-color: #5865F2;
+  color: #dcddde;
+}
+
+/* Code styling for posts */
+code {
+  background-color: #40444b;
+  color: #dcddde;
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  font-family: 'Courier New', monospace;
+}
+
+pre {
+  background-color: #40444b;
+  color: #dcddde;
+  padding: 1rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  border: 1px solid #202225;
+}
+
+/* Input placeholder styling */
+input::placeholder,
+textarea::placeholder {
+  color: #72767d;
+}
+
+/* Hover states for better UX */
+a {
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: #7289da;
+}
+
+/* General transitions */
+* {
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
