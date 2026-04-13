@@ -1,12 +1,25 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
+  --primary: #6366f1;
+  --primary-dark: #4f46e5;
+  --primary-light: #818cf8;
+  --bg-dark: #0f172a;
+  --bg-darker: #0a0f1f;
+  --bg-card: #1e293b;
+  --bg-card-hover: #334155;
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-tertiary: #94a3b8;
+  --border-color: #334155;
+  --success: #10b981;
+  --error: #ef4444;
+  --warning: #f59e0b;
+  
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  line-height: 1.6;
   font-weight: 400;
-
   color-scheme: dark;
-  color: #dcddde;
-  background-color: #36393f;
-
+  color: var(--text-primary);
+  background-color: var(--bg-dark);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -27,27 +40,37 @@ html, body, #root {
 }
 
 body {
-  background-color: #36393f;
-  color: #dcddde;
+  background: linear-gradient(135deg, var(--bg-darker) 0%, var(--bg-dark) 100%);
+  color: var(--text-primary);
 }
 
 a {
   font-weight: 500;
-  color: #5865F2;
+  color: var(--primary-light);
   text-decoration: inherit;
+  transition: color 0.3s ease;
 }
 a:hover {
-  color: #7289da;
+  color: var(--primary);
 }
 
 h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+  font-size: 2.5em;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+h2 {
+  font-size: 1.5em;
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
 button {
-  border-radius: 6px;
+  border-radius: 8px;
   border: 1px solid transparent;
+  font-family: inherit;
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;

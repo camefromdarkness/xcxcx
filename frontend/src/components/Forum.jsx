@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import './Forum.css';
+import UserProfileModal from './UserProfileModal';
 
-const Forum = () => {
+const Forum = ({ onStartChat }) => {
   const { user } = useAuth();
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -10,6 +11,7 @@ const Forum = () => {
   const [editingId, setEditingId] = useState(null);
   const [editingData, setEditingData] = useState({ title: '', content: '' });
   const [error, setError] = useState('');
+  const [openProfileUserId, setOpenProfileUserId] = useState('');
 
   useEffect(() => {
     fetchPosts();
@@ -20,7 +22,7 @@ const Forum = () => {
       const response = await fetch('http://localhost:3000/api/posts');
       if (response.ok) {
         const data = await response.json();
-        setPosts(data);
+        setPosts(data.posts || []);
       }
     } catch (error) {
       console.error('Error fetching posts:', error);
@@ -48,8 +50,11 @@ const Forum = () => {
       });
 
       if (response.ok) {
-        const createdPost = await response.json();
-        setPosts([createdPost, ...posts]);
+        const data = await response.json();
+        const createdPost = data.post;
+        if (createdPost) {
+          setPosts((prev) => [createdPost, ...prev]);
+        }
         setNewPost({ title: '', content: '' });
         setError('');
       } else {
@@ -103,8 +108,11 @@ const Forum = () => {
       });
 
       if (response.ok) {
-        const updatedPost = await response.json();
-        setPosts(posts.map(p => p._id === postId ? updatedPost : p));
+        const data = await response.json();
+        const updatedPost = data.post;
+        if (updatedPost) {
+          setPosts((prev) => prev.map(p => p._id === postId ? updatedPost : p));
+        }
         setEditingId(null);
         setError('');
       } else {
@@ -124,6 +132,12 @@ const Forum = () => {
   return (
     <div className="forum">
       <h1>Форум</h1>
+
+      <UserProfileModal
+        userId={openProfileUserId}
+        onClose={() => setOpenProfileUserId('')}
+        onStartChat={onStartChat}
+      />
 
       {user && (
         <div className="create-post-section">
@@ -183,10 +197,20 @@ const Forum = () => {
                 <>
                   <h3 className="post-title">{post.title}</h3>
                   <p className="post-meta">
-                    Автор: <strong>{post.authorEmail}</strong> | {new Date(post.createdAt).toLocaleString('ru-RU')}
+                    Автор:{' '}
+                    <strong
+                      style={{ cursor: post.author?._id ? 'pointer' : 'default', textDecoration: 'underline' }}
+                      onClick={() => {
+                        if (post.author?._id) setOpenProfileUserId(post.author._id);
+                      }}
+                      title={post.author?._id ? 'Открыть профиль' : ''}
+                    >
+                      {post.author?.nickname || post.author?.email || post.authorEmail}
+                    </strong>{' '}
+                    | {new Date(post.createdAt).toLocaleString('ru-RU')}
                   </p>
                   <p className="post-content">{post.content}</p>
-                  {user && user.email === post.authorEmail && (
+                  {user && (post.author?._id ? user.id === post.author._id : user.email === post.authorEmail) && (
                     <div className="post-actions">
                       <button
                         onClick={() => {

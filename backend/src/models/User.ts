@@ -1,9 +1,15 @@
 import mongoose, { Document } from "mongoose";
 import bcrypt from "bcrypt";
 
-interface IUser extends Document {
+export interface IUser extends Document {
   email: string;
   password: string;
+  nickname?: string;
+  userType?: string;
+  bio?: string;
+  deletedAt?: Date | null;
+  createdAt?: Date;
+  updatedAt?: Date;
   comparePassword: (password: string) => Promise<boolean>;
 }
 
@@ -19,6 +25,30 @@ const userSchema = new mongoose.Schema<IUser>(
     password: {
       type: String,
       required: true,
+    },
+    nickname: {
+      type: String,
+      trim: true,
+      minlength: 2,
+      maxlength: 32,
+      default: "",
+    },
+    userType: {
+      type: String,
+      trim: true,
+      maxlength: 32,
+      default: "user",
+    },
+    bio: {
+      type: String,
+      trim: true,
+      maxlength: 280,
+      default: "",
+    },
+    deletedAt: {
+      type: Date,
+      default: null,
+      index: true,
     },
   },
   { timestamps: true }

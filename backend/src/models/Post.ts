@@ -5,6 +5,7 @@ interface IPost extends Document {
   content: string;
   author: mongoose.Types.ObjectId;
   authorEmail: string;
+  deletedAt?: Date | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -28,6 +29,11 @@ const postSchema = new mongoose.Schema<IPost>(
     authorEmail: {
       type: String,
       required: true,
+    },
+    deletedAt: {
+      type: Date,
+      default: null,
+      index: true,
     },
   },
   { timestamps: true }
