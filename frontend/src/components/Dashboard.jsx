@@ -146,29 +146,35 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard">
-      <div className="navbar">
-        <h1 className="logo">Форум</h1>
-        <div className="nav-links">
+      <div className="side-nav">
+        <div className="side-nav-content">
           <button
             onClick={() => setCurrentView('forum')}
-            className={currentView === 'forum' ? 'nav-btn active' : 'nav-btn'}
+            className={currentView === 'forum' ? 'side-nav-item active' : 'side-nav-item'}
+            title="Форум"
           >
-            Форум
+            <i className="fas fa-comments"></i>
+            <span className="nav-text">Форум</span>
           </button>
           <button
             onClick={() => setCurrentView('chat')}
-            className={currentView === 'chat' ? 'nav-btn active' : 'nav-btn'}
+            className={currentView === 'chat' ? 'side-nav-item active' : 'side-nav-item'}
+            title="Сообщения"
           >
-            Сообщения
+            <i className="fas fa-envelope"></i>
+            <span className="nav-text">Сообщения</span>
           </button>
           <button
             onClick={() => setCurrentView('profile')}
-            className={currentView === 'profile' ? 'nav-btn active' : 'nav-btn'}
+            className={currentView === 'profile' ? 'side-nav-item active' : 'side-nav-item'}
+            title="Профиль"
           >
-            Профиль
+            <i className="fas fa-user"></i>
+            <span className="nav-text">Профиль</span>
           </button>
-          <button onClick={logout} className="logout-button">
-            Выйти
+          <button onClick={logout} className="side-nav-item logout" title="Выйти">
+            <i className="fas fa-sign-out-alt"></i>
+            <span className="nav-text">Выйти</span>
           </button>
         </div>
       </div>
@@ -188,16 +194,16 @@ const Dashboard = () => {
           />
         ) : (
           <div className="profile-section">
-            <h2>Мой профиль</h2>
+            <h2><i className="fas fa-user-circle"></i> Мой профиль</h2>
             <div className="user-info">
-              <p><strong>Ник:</strong> {user?.nickname || '—'}</p>
-              <p><strong>Email:</strong> {user?.email}</p>
-              <p><strong>ID:</strong> {user?.id}</p>
+              <p><i className="fas fa-tag"></i> <strong>Ник:</strong> {user?.nickname || '—'}</p>
+              <p><i className="fas fa-envelope"></i> <strong>Email:</strong> {user?.email}</p>
+              <p><i className="fas fa-id-badge"></i> <strong>ID:</strong> {user?.id}</p>
             </div>
 
             <div className="sessions-section" style={{ marginBottom: '1rem' }}>
               <div className="sessions-header">
-                <h3>Редактировать профиль</h3>
+                <h3><i className="fas fa-edit"></i> Редактировать профиль</h3>
               </div>
               {profileError && <div className="error-message">{profileError}</div>}
               <form onSubmit={updateProfile}>
@@ -218,24 +224,24 @@ const Dashboard = () => {
                   />
                 </div>
                 <button type="submit" disabled={profileSaving}>
-                  {profileSaving ? 'Сохраняем...' : 'Сохранить'}
+                  {profileSaving ? <><i className="fas fa-spinner fa-spin"></i> Сохраняем...</> : <><i className="fas fa-save"></i> Сохранить</>}
                 </button>
               </form>
             </div>
 
             <div className="sessions-section">
               <div className="sessions-header">
-                <h3>Активные сессии</h3>
+                <h3><i className="fas fa-shield-alt"></i> Активные сессии</h3>
                 <div className="sessions-actions">
                   <button onClick={loadSessions} className="nav-btn" disabled={sessionsLoading}>
-                    Обновить
+                    <i className="fas fa-sync-alt"></i> {sessionsLoading ? 'Обновляем...' : 'Обновить'}
                   </button>
                   <button
                     onClick={disableOtherSessions}
                     className="logout-button"
                     disabled={logoutOthersLoading || sessionsLoading}
                   >
-                    {logoutOthersLoading ? 'Отключаем...' : 'Отключить остальные'}
+                    {logoutOthersLoading ? <><i className="fas fa-spinner fa-spin"></i> Отключаем...</> : <><i className="fas fa-power-off"></i> Отключить остальные</>}
                   </button>
                 </div>
               </div>
@@ -252,17 +258,17 @@ const Dashboard = () => {
                     <div key={session.id} className="session-card">
                       <div className="session-main">
                         <p>
-                          <strong>Устройство:</strong> {session.userAgent || 'Неизвестно'}
+                          <i className="fas fa-desktop"></i> <strong>Устройство:</strong> {session.userAgent || 'Неизвестно'}
                         </p>
                         <p>
-                          <strong>IP:</strong> {session.ipAddress || 'Неизвестно'}
+                          <i className="fas fa-globe"></i> <strong>IP:</strong> {session.ipAddress || 'Неизвестно'}
                         </p>
                         <p>
-                          <strong>Последняя активность:</strong>{' '}
+                          <i className="fas fa-clock"></i> <strong>Последняя активность:</strong>{' '}
                           {new Date(session.lastActivityAt).toLocaleString('ru-RU')}
                         </p>
                         {session.isCurrentSession && (
-                          <span className="current-badge">Текущая сессия</span>
+                          <span className="current-badge"><i className="fas fa-check-circle"></i> Текущая сессия</span>
                         )}
                       </div>
 
@@ -271,7 +277,7 @@ const Dashboard = () => {
                         onClick={() => disableSession(session.id)}
                         disabled={actionSessionId === session.id}
                       >
-                        {actionSessionId === session.id ? 'Отключаем...' : 'Отключить'}
+                        {actionSessionId === session.id ? <><i className="fas fa-spinner fa-spin"></i> Отключаем...</> : <><i className="fas fa-times"></i> Отключить</>}
                       </button>
                     </div>
                   ))}

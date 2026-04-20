@@ -12,6 +12,12 @@ const Forum = ({ onStartChat }) => {
   const [editingData, setEditingData] = useState({ title: '', content: '' });
   const [error, setError] = useState('');
   const [openProfileUserId, setOpenProfileUserId] = useState('');
+  const [comments, setComments] = useState({});
+  const [newComments, setNewComments] = useState({});
+  const [showComments, setShowComments] = useState({});
+  const [editingCommentId, setEditingCommentId] = useState(null);
+  const [editingCommentData, setEditingCommentData] = useState('');
+  const [deleteConfirm, setDeleteConfirm] = useState(null); // { postId, commentId }
 
   useEffect(() => {
     fetchPosts();
@@ -91,6 +97,201 @@ const Forum = ({ onStartChat }) => {
     }
   };
 
+  const handleLikePost = async (postId) => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/posts/${postId}/like`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setPosts(posts.map(p => p._id === postId ? data.post : p));
+        setError('');
+      } else {
+        const errorData = await response.json();
+        setError(errorData.error || 'Ошибка при лайке поста');
+      }
+    } catch (error) {
+      console.error('Error liking post:', error);
+      setError('Ошибка при лайке поста');
+    }
+  };
+
+  const handleUnlikePost = async (postId) => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/posts/${postId}/like`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setPosts(posts.map(p => p._id === postId ? data.post : p));
+        setError('');
+      } else {
+        const errorData = await response.json();
+        setError(errorData.error || 'Ошибка при снятии лайка');
+      }
+    } catch (error) {
+      console.error('Error unliking post:', error);
+      setError('Ошибка при снятии лайка');
+    }
+  };
+
+  const loadComments = async (postId) => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/posts/${postId}/comments`);
+      if (response.ok) {
+        const data = await response.json();
+        setComments(prev => ({ ...prev, [postId]: data.comments }));
+      }
+    } catch (error) {
+      console.error('Error loading comments:', error);
+    }
+  };
+
+  const handleAddComment = async (postId) => {
+    const content = newComments[postId]?.trim();
+    if (!content) return;
+
+    try {
+      const response = await fetch(`http://localhost:3000/api/posts/${postId}/comments`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({ content })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setComments(prev => ({
+          ...prev,
+          [postId]: [...(prev[postId] || []), data.comment]
+        }));
+        setNewComments(prev => ({ ...prev, [postId]: '' }));
+        // Обновляем счетчик комментариев
+        setPosts(posts.map(p => 
+          p._id === postId 
+            ? { ...p, commentsCount: (p.commentsCount || 0) + 1 }
+            : p
+        ));
+        setError('');
+      } else {
+        const errorData = await response.json();
+        setError(errorData.error || 'Ошибка при добавлении комментария');
+      }
+    } catch (error) {
+      console.error('Error adding comment:', error);
+      setError('Ошибка при добавлении комментария');
+    }
+  };
+
+  const handleDeleteComment = async (postId, commentId) => {
+    setDeleteConfirm({ postId, commentId });
+  };
+
+  const confirmDeleteComment = async () => {
+    if (!deleteConfirm) return;
+
+    const { postId, commentId } = deleteConfirm;
+
+    try {
+      const response = await fetch(`http://localhost:3000/api/posts/${postId}/comments/${commentId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+
+      if (response.ok) {
+        setComments(prev => ({
+          ...prev,
+          [postId]: prev[postId].filter(c => c._id !== commentId)
+        }));
+        // Обновляем счетчик комментариев
+        setPosts(posts.map(p => 
+          p._id === postId 
+            ? { ...p, commentsCount: Math.max(0, (p.commentsCount || 0) - 1) }
+            : p
+        ));
+        setError('');
+        setDeleteConfirm(null);
+      } else {
+        const errorData = await response.json();
+        setError(errorData.error || 'Ошибка при удалении комментария');
+        setDeleteConfirm(null);
+      }
+    } catch (error) {
+      console.error('Error deleting comment:', error);
+      setError('Ошибка при удалении комментария');
+      setDeleteConfirm(null);
+    }
+  };
+
+  const cancelDeleteComment = () => {
+    setDeleteConfirm(null);
+  };
+
+  const handleEditComment = async (postId, commentId) => {
+    if (!editingCommentData.trim()) {
+      setError('Комментарий не может быть пустым');
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:3000/api/posts/${postId}/comments/${commentId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({ content: editingCommentData.trim() })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setComments(prev => ({
+          ...prev,
+          [postId]: prev[postId].map(c => c._id === commentId ? data.comment : c)
+        }));
+        setEditingCommentId(null);
+        setEditingCommentData('');
+        setError('');
+      } else {
+        const errorData = await response.json();
+        setError(errorData.error || 'Ошибка при редактировании комментария');
+      }
+    } catch (error) {
+      console.error('Error editing comment:', error);
+      setError('Ошибка при редактировании комментария');
+    }
+  };
+
+  const startEditingComment = (commentId, content) => {
+    setEditingCommentId(commentId);
+    setEditingCommentData(content);
+  };
+
+  const cancelEditingComment = () => {
+    setEditingCommentId(null);
+    setEditingCommentData('');
+  };
+
+  const toggleComments = (postId) => {
+    const isShown = showComments[postId];
+    setShowComments(prev => ({ ...prev, [postId]: !isShown }));
+    if (!isShown && !comments[postId]) {
+      loadComments(postId);
+    }
+  };
+
   const handleEditPost = async (postId) => {
     if (!editingData.title.trim() || !editingData.content.trim()) {
       setError('Заполните название и содержание');
@@ -131,7 +332,6 @@ const Forum = ({ onStartChat }) => {
 
   return (
     <div className="forum">
-      <h1>Форум</h1>
 
       <UserProfileModal
         userId={openProfileUserId}
@@ -210,6 +410,132 @@ const Forum = ({ onStartChat }) => {
                     | {new Date(post.createdAt).toLocaleString('ru-RU')}
                   </p>
                   <p className="post-content">{post.content}</p>
+                  
+                  <div className="post-stats">
+                    <div className="likes-section">
+                      {user && post.likes && (
+                        <>
+                          <button
+                            onClick={() => post.likes.some(like => like._id.toString() === user.id || like.email === user.email) 
+                              ? handleUnlikePost(post._id) 
+                              : handleLikePost(post._id)}
+                            className={`like-btn ${post.likes.some(like => like._id.toString() === user.id || like.email === user.email) ? 'liked' : ''}`}
+                          >
+                            <i className="fas fa-heart"></i> {post.likes.length}
+                          </button>
+                        </>
+                      )}
+                      {!user && post.likes && (
+                        <span className="likes-count">
+                          <i className="fas fa-heart"></i> {post.likes.length}
+                        </span>
+                      )}
+                    </div>
+                    
+                    <button 
+                      onClick={() => toggleComments(post._id)}
+                      className="comments-btn"
+                    >
+                      <i className="fas fa-comment"></i> {post.commentsCount || 0}
+                    </button>
+                  </div>
+
+                  {showComments[post._id] && (
+                    <div className="comments-section">
+                      {user && (
+                        <div className="add-comment">
+                          <textarea
+                            placeholder="Написать комментарий..."
+                            value={newComments[post._id] || ''}
+                            onChange={(e) => setNewComments(prev => ({ ...prev, [post._id]: e.target.value }))}
+                            className="comment-input"
+                            rows="2"
+                          />
+                          <button 
+                            onClick={() => handleAddComment(post._id)}
+                            className="btn-comment"
+                            disabled={!newComments[post._id]?.trim()}
+                          >
+                            Отправить
+                          </button>
+                        </div>
+                      )}
+                      
+                      <div className="comments-list">
+                        {comments[post._id]?.length > 0 ? (
+                          comments[post._id].map(comment => (
+                            <div key={comment._id} className="comment-item">
+                              <div className="comment-header">
+                                <strong
+                                  style={{ cursor: comment.author?._id ? 'pointer' : 'default', textDecoration: 'underline' }}
+                                  onClick={() => {
+                                    if (comment.author?._id) setOpenProfileUserId(comment.author._id);
+                                  }}
+                                  title={comment.author?._id ? 'Открыть профиль' : ''}
+                                >
+                                  {comment.author?.nickname || comment.author?.email || comment.authorEmail}
+                                </strong>
+                                <div className="comment-actions">
+                                  <span className="comment-date">
+                                    {new Date(comment.createdAt).toLocaleString('ru-RU')}
+                                  </span>
+                                  {user && (comment.author?._id ? user.id === comment.author._id : user.email === comment.authorEmail) && (
+                                    <>
+                                      <button
+                                        onClick={() => startEditingComment(comment._id, comment.content)}
+                                        className="btn-edit-comment"
+                                        title="Редактировать комментарий"
+                                      >
+                                        <i className="fas fa-edit"></i>
+                                      </button>
+                                      <button
+                                        onClick={() => handleDeleteComment(post._id, comment._id)}
+                                        className="btn-delete-comment"
+                                        title="Удалить комментарий"
+                                      >
+                                        <i className="fas fa-trash"></i>
+                                      </button>
+                                    </>
+                                  )}
+                                </div>
+                              </div>
+                              
+                              {editingCommentId === comment._id ? (
+                                <div className="comment-edit-form">
+                                  <textarea
+                                    value={editingCommentData}
+                                    onChange={(e) => setEditingCommentData(e.target.value)}
+                                    className="comment-edit-input"
+                                    rows="3"
+                                  />
+                                  <div className="comment-edit-buttons">
+                                    <button
+                                      onClick={() => handleEditComment(post._id, comment._id)}
+                                      className="btn-save-comment"
+                                      disabled={!editingCommentData.trim()}
+                                    >
+                                      Сохранить
+                                    </button>
+                                    <button
+                                      onClick={cancelEditingComment}
+                                      className="btn-cancel-comment"
+                                    >
+                                      Отмена
+                                    </button>
+                                  </div>
+                                </div>
+                              ) : (
+                                <p className="comment-content">{comment.content}</p>
+                              )}
+                            </div>
+                          ))
+                        ) : (
+                          <p className="no-comments">Нет комментариев</p>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
                   {user && (post.author?._id ? user.id === post.author._id : user.email === post.authorEmail) && (
                     <div className="post-actions">
                       <button
@@ -235,6 +561,34 @@ const Forum = ({ onStartChat }) => {
           ))
         )}
       </div>
+
+      {/* Модальное окно подтверждения удаления комментария */}
+      {deleteConfirm && (
+        <div className="modal-overlay" onClick={cancelDeleteComment}>
+          <div className="modal-content delete-confirm-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Удалить комментарий</h3>
+            </div>
+            <div className="modal-body">
+              <p>Вы уверены, что хотите удалить этот комментарий? Это действие нельзя отменить.</p>
+            </div>
+            <div className="modal-footer">
+              <button
+                onClick={cancelDeleteComment}
+                className="btn-cancel"
+              >
+                Отмена
+              </button>
+              <button
+                onClick={confirmDeleteComment}
+                className="btn-delete-confirm"
+              >
+                Удалить
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

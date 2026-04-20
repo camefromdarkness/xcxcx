@@ -7,7 +7,7 @@
 .app {
   width: 100%;
   height: 100vh;
-  background: linear-gradient(135deg, #0a0f1f 0%, #0f172a 100%);
+  background: var(--bg-dark);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -15,42 +15,17 @@
   overflow: hidden;
 }
 
-.app::before {
-  content: '';
-  position: absolute;
-  width: 40%;
-  height: 40%;
-  background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
-  border-radius: 50%;
-  top: -20%;
-  left: -20%;
-  pointer-events: none;
-}
-
-.app::after {
-  content: '';
-  position: absolute;
-  width: 40%;
-  height: 40%;
-  background: radial-gradient(circle, rgba(16, 185, 129, 0.05) 0%, transparent 70%);
-  border-radius: 50%;
-  bottom: -20%;
-  right: -20%;
-  pointer-events: none;
-}
-
 .auth-container {
-  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-  border: 1px solid rgba(99, 102, 241, 0.2);
-  border-radius: 12px;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   padding: 2.5rem;
   width: 100%;
   max-width: 420px;
   margin: 1rem;
   position: relative;
   z-index: 1;
-  backdrop-filter: blur(10px);
 }
 
 .auth-form h2 {
@@ -79,11 +54,11 @@
   width: 100%;
   padding: 0.9rem;
   border: 1px solid var(--border-color);
-  background-color: var(--bg-card);
+  background-color: var(--bg-dark);
   color: var(--text-primary);
-  border-radius: 8px;
+  border-radius: 6px;
   font-size: 1rem;
-  transition: all 0.3s ease;
+  transition: all 0.15s ease;
 }
 
 .form-group input::placeholder {
@@ -94,88 +69,81 @@
   outline: none;
   border-color: var(--primary-light);
   background-color: var(--bg-card);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15), inset 0 0 0 1px rgba(99, 102, 241, 0.1);
 }
 
 .form-group input:disabled {
-  background-color: var(--bg-darker);
-  cursor: not-allowed;
   opacity: 0.5;
+  cursor: not-allowed;
 }
 
 button {
   width: 100%;
   padding: 0.9rem;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-  color: white;
-  border: none;
-  border-radius: 8px;
+  background: var(--primary);
+  color: var(--text-primary);
+  border: 1px solid var(--primary);
+  border-radius: 6px;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+  transition: all 0.15s ease;
 }
 
 button:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 25px rgba(99, 102, 241, 0.4);
-}
-
-button:active:not(:disabled) {
-  transform: translateY(0);
+  background: var(--primary-light);
+  border-color: var(--primary-light);
 }
 
 button:disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
 .logout-button {
-  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  background: var(--error);
+  border-color: var(--error);
   margin-top: 1rem;
   width: auto;
-  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
 }
 
 .logout-button:hover {
-  box-shadow: 0 6px 25px rgba(239, 68, 68, 0.4);
+  background: #b71c1c;
+  border-color: #b71c1c;
 }
 
 .error-message {
-  background-color: rgba(237, 66, 69, 0.15);
-  color: #f04747;
+  background-color: rgba(211, 47, 47, 0.15);
+  color: #ff6b6b;
   padding: 0.75rem;
   border-radius: 6px;
   margin-bottom: 1rem;
-  border-left: 4px solid #ed4245;
+  border: 1px solid rgba(211, 47, 47, 0.3);
   font-size: 0.9rem;
 }
 
 .link-button {
   background: none;
-  color: #5865F2;
+  color: var(--primary-light);
   text-decoration: underline;
   font-weight: 500;
   padding: 0;
   width: auto;
+  border: none;
 }
 
 .link-button:hover {
   background: none;
-  color: #7289da;
-  transform: none;
-  box-shadow: none;
+  color: var(--primary);
 }
 
 .auth-form p {
   text-align: center;
   margin-top: 1.5rem;
-  color: #b9bbbe;
+  color: var(--text-secondary);
 }
 
 .loading {
-  color: #dcddde;
+  color: var(--text-secondary);
   font-size: 1.2rem;
   text-align: center;
 }

@@ -1,26 +1,21 @@
 import mongoose, { Document } from "mongoose";
 
-interface IPost extends Document {
-  title: string;
+interface IComment extends Document {
   content: string;
   author: mongoose.Types.ObjectId;
   authorEmail: string;
-  likes: mongoose.Types.ObjectId[];
+  post: mongoose.Types.ObjectId;
   deletedAt?: Date | null;
   createdAt: Date;
   updatedAt: Date;
 }
 
-const postSchema = new mongoose.Schema<IPost>(
+const commentSchema = new mongoose.Schema<IComment>(
   {
-    title: {
-      type: String,
-      required: true,
-      trim: true,
-    },
     content: {
       type: String,
       required: true,
+      trim: true,
     },
     author: {
       type: mongoose.Schema.Types.ObjectId,
@@ -31,10 +26,11 @@ const postSchema = new mongoose.Schema<IPost>(
       type: String,
       required: true,
     },
-    likes: [{
+    post: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    }],
+      ref: "Post",
+      required: true,
+    },
     deletedAt: {
       type: Date,
       default: null,
@@ -44,6 +40,6 @@ const postSchema = new mongoose.Schema<IPost>(
   { timestamps: true }
 );
 
-const Post = mongoose.model<IPost>("Post", postSchema);
+const Comment = mongoose.model<IComment>("Comment", commentSchema);
 
-export default Post;
+export default Comment;

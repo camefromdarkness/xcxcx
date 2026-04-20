@@ -7,33 +7,16 @@
   justify-content: center;
   padding: 1rem;
   z-index: 1000;
-  backdrop-filter: blur(2px);
 }
 
 .upm-card {
   width: 100%;
   max-width: 520px;
-  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-  border: 1px solid rgba(99, 102, 241, 0.2);
-  border-radius: 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
-  animation: modalSlide 0.3s ease;
-}
-
-@keyframes modalSlideProfile {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.upm-card {
-  animation: modalSlideProfile 0.3s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
 }
 
 .upm-header {
@@ -41,8 +24,8 @@
   align-items: center;
   justify-content: space-between;
   padding: 1.5rem;
-  border-bottom: 1px solid rgba(99, 102, 241, 0.1);
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, transparent 100%);
+  border-bottom: 1px solid var(--border-color);
+  background: var(--bg-dark);
 }
 
 .upm-title {
@@ -55,14 +38,16 @@
   width: auto;
   padding: 0.5rem 0.8rem;
   background: transparent;
-  border: 1px solid rgba(99, 102, 241, 0.2);
+  border: 1px solid var(--border-color);
   border-radius: 6px;
   color: var(--text-tertiary);
-  transition: all 0.3s ease;
+  transition: all 0.15s ease;
+  cursor: pointer;
+  font-weight: 600;
 }
 
 .upm-close:hover {
-  background: rgba(99, 102, 241, 0.1);
+  background: var(--bg-card);
   border-color: var(--primary-light);
   color: var(--text-primary);
 }
@@ -77,8 +62,8 @@
 .upm-row {
   color: var(--text-secondary);
   padding: 0.75rem;
-  background: rgba(99, 102, 241, 0.05);
-  border-radius: 8px;
+  background: var(--bg-dark);
+  border-radius: 6px;
   font-weight: 500;
 }
 
